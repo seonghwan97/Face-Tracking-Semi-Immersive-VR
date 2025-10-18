@@ -76,13 +76,15 @@ Each component in the data pipeline is summarized below.
 ### End-to-End Data Flow
 
 ```mermaid
-flowchart LR
+%%{init: {'flowchart': {'htmlLabels': false}}}%%
+flowchart TB
     A["Webcam Capture\n(OpenCV)"] --> B["MediaPipe FaceMesh\n(478 Landmarks)"]
     B --> C["Coordinate Normalization"]
     C --> D["Transformer Model\nPredict Roll / Pitch / Yaw"]
-    D --> E["One-Euro Filter\nAdaptive Smoothing"]
+    D --> E["One Euro Filter\nAdaptive Smoothing"]
     E --> F["UDP Transmission"]
     F --> G["Unity Receiver (C#)\nCamera Rotation"]
+
 ```
 
 ---
@@ -176,7 +178,7 @@ Each subject folder includes synchronized RGB, depth, and annotation files:
 ## End-to-End Pipeline
 ```mermaid
 %%{init: {'flowchart': {'htmlLabels': false}}}%%
-flowchart LR
+flowchart TB
   %% ---------- Offline Training ----------
   subgraph TRAIN[Offline Training - BIWI]
     A1[BIWI RGB and Pose Labels] --> A2[Landmark Extraction via MediaPipe]
@@ -203,6 +205,7 @@ flowchart LR
   %% ---------- Cross Links ----------
   A5 -. pretrained weights .-> B4
   B6 --> C1
+
 ```
 
 
