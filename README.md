@@ -211,7 +211,18 @@ flowchart TB
 
 ## Training Pipeline
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.25}}}%%
+%%{init: {
+  'flowchart': {
+    'htmlLabels': false,
+    'useMaxWidth': false,
+    'curve': 'basis',
+    'nodeSpacing': 30,
+    'rankSpacing': 30
+  },
+  'themeVariables': {
+    'fontSize': '8px'
+  }
+}}%%
 flowchart TB
     D1[BIWI RGB Frames] --> P1[MediaPipe Landmarks]
     D2[Ground Truth Angles] --> J[Preprocessing and Alignment]
