@@ -2,7 +2,11 @@
 **Seonghwan Lim, Department of Computer Science, Illinois Institute of Technology**
 
 ---
-![Demo of Face Tracking](recording.gif)
+<div align="center">
+  <img src="recording.gif" alt="Demo of Face Tracking" width="60%">
+  <p><em>Demo of Face Tracking</em></p>
+</div>
+
 
 ### Abstract
 
@@ -75,7 +79,18 @@ Each component in the data pipeline is summarized below.
 
 ### End-to-End Data Flow
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false, 'curve': 'basis'}, 'themeVariables': {'scale': 0.25}}}%%
+%%{init: {
+  'flowchart': {
+    'htmlLabels': false,
+    'useMaxWidth': false,
+    'curve': 'basis',
+    'nodeSpacing': 25,
+    'rankSpacing': 25
+  },
+  'themeVariables': {
+    'fontSize': '6px'
+  }
+}}%%
 flowchart TB
     A["Webcam Capture\n(OpenCV)"] --> B["MediaPipe FaceMesh (478 Landmarks)"]
     B --> C["Coordinate Normalization"]
@@ -119,8 +134,12 @@ These landmarks provide rich geometric cues for accurately estimating head orien
 MediaPipe FaceMesh produces 478 landmarks across eyes, lips, and contours.  
 Each landmark has normalized (x, y, z) coordinates.
 
-<img src="https://ai.google.dev/static/mediapipe/images/solutions/face_landmarker_keypoints.png" 
-     alt="Face Mesh 478 Landmarks" width="50%">
+<p align="center">
+  <img src="https://ai.google.dev/static/mediapipe/images/solutions/face_landmarker_keypoints.png" 
+       alt="Face Mesh 478 Landmarks" width="50%">
+  <br>
+  <em>Face Mesh — 478 Landmarks (MediaPipe)</em>
+</p>
 
 *(Image source: Google MediaPipe Face Landmarker Guide.)*
 
@@ -175,7 +194,18 @@ Each subject folder includes synchronized RGB, depth, and annotation files:
 
 ## End-to-End Pipeline
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.25}}}%%
+%%{init: {
+  'flowchart': {
+    'htmlLabels': false,
+    'useMaxWidth': false,
+    'curve': 'basis',
+    'nodeSpacing': 25,
+    'rankSpacing': 25
+  },
+  'themeVariables': {
+    'fontSize': '6px'
+  }
+}}%%
 flowchart TB
   subgraph TRAIN[Offline Training - BIWI]
     A1[BIWI RGB and Pose Labels] --> A2[Landmark Extraction via MediaPipe]
