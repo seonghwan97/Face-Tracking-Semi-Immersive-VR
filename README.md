@@ -2,6 +2,7 @@
 **Seonghwan Lim, Department of Computer Science, Illinois Institute of Technology**
 
 ---
+![Demo of Face Tracking](recording.gif)
 
 ### Abstract
 
@@ -118,7 +119,8 @@ These landmarks provide rich geometric cues for accurately estimating head orien
 MediaPipe FaceMesh produces 478 landmarks across eyes, lips, and contours.  
 Each landmark has normalized (x, y, z) coordinates.
 
-![Face Mesh 478 Landmarks](https://ai.google.dev/static/mediapipe/images/solutions/face_landmarker_keypoints.png)
+<img src="https://ai.google.dev/static/mediapipe/images/solutions/face_landmarker_keypoints.png" 
+     alt="Face Mesh 478 Landmarks" width="50%">
 
 *(Image source: Google MediaPipe Face Landmarker Guide.)*
 
@@ -172,41 +174,42 @@ Each subject folder includes synchronized RGB, depth, and annotation files:
 ---
 
 ## End-to-End Pipeline
-
+```mermaid
 %%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart LR
   %% ---------- Offline Training ----------
   subgraph TRAIN[Offline Training - BIWI]
-    A1[BIWI RGB + Pose Labels] --> A2[Landmark Extraction (MediaPipe)]
+    A1[BIWI RGB and Pose Labels] --> A2[Landmark Extraction via MediaPipe]
     A2 --> A3[Coordinate Normalization]
-    A3 --> A4[Transformer Regression Training (Roll, Yaw, Pitch)]
+    A3 --> A4[Transformer Regression Training - Roll, Yaw, Pitch]
     A4 --> A5[(transformer.pth)]
   end
 
   %% ---------- Online Inference ----------
   subgraph INFER[Online Inference - Python Runtime]
-    B1[Webcam Frame] --> B2[FaceMesh (478 landmarks)]
+    B1[Webcam Frame] --> B2[FaceMesh with 478 Landmarks]
     B2 --> B3[Normalization]
     B3 --> B4[Transformer Prediction]
-    B4 --> B5[One-Euro Filter]
-    B5 --> B6[UDP Packet (rollZ, pitchX, yawY)]
+    B4 --> B5[One Euro Filter]
+    B5 --> B6[UDP Packet rollZ pitchX yawY]
   end
 
   %% ---------- Unity ----------
   subgraph UNITY[Unity Engine]
-    C1[UDP Receiver (C#)] --> C2[Auto-Spin Logic +/- 30 deg]
+    C1[UDP Receiver in C Sharp] --> C2[Auto Spin Logic plusminus 30 deg]
     C2 --> C3[Main Camera Rotation]
   end
 
-  %% ---------- Cross-links ----------
+  %% ---------- Cross Links ----------
   A5 -. pretrained weights .-> B4
   B6 --> C1
+```
 
 
 ---
 
 ## Training Pipeline
-
+```mermaid
 %%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart TB
     D1[BIWI RGB Frames] --> P1[MediaPipe Landmarks]
@@ -215,6 +218,7 @@ flowchart TB
     N1 --> M1[Transformer Training - MSE Loss]
     J --> M1
     M1 --> W[(transformer.pth)]
+```
 
 
 ---
