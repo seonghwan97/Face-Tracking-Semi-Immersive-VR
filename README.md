@@ -75,7 +75,7 @@ Each component in the data pipeline is summarized below.
 
 ### End-to-End Data Flow
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false, 'curve': 'basis'}, 'themeVariables': {'scale': 0.5}}}%%
+%%{init: {'flowchart': {'htmlLabels': false, 'curve': 'basis'}, 'themeVariables': {'scale': 0.25}}}%%
 flowchart TB
     A["Webcam Capture\n(OpenCV)"] --> B["MediaPipe FaceMesh (478 Landmarks)"]
     B --> C["Coordinate Normalization"]
@@ -175,7 +175,7 @@ Each subject folder includes synchronized RGB, depth, and annotation files:
 
 ## End-to-End Pipeline
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.5}}}%%
+%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.25}}}%%
 flowchart TB
   subgraph TRAIN[Offline Training - BIWI]
     A1[BIWI RGB and Pose Labels] --> A2[Landmark Extraction via MediaPipe]
@@ -187,7 +187,7 @@ flowchart TB
   %% ---------- Online Inference ----------
   subgraph INFER[Online Inference - Python Runtime]
     I0(( )):::spacer
-    I0 --> B1[Webcam Frame]
+    B1[Webcam Frame]
     B1 --> B2[FaceMesh with 478 Landmarks]
     B2 --> B3[Normalization]
     B3 --> B4[Transformer Prediction]
@@ -211,7 +211,7 @@ flowchart TB
 
 ## Training Pipeline
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.5}}}%%
+%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.25}}}%%
 flowchart TB
     D1[BIWI RGB Frames] --> P1[MediaPipe Landmarks]
     D2[Ground Truth Angles] --> J[Preprocessing and Alignment]
