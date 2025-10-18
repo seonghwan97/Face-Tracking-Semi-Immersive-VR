@@ -19,10 +19,10 @@ This low-cost and portable setup demonstrates that **marker-free, webcam-only he
 can approximate the responsiveness of professional VR hardware with less than **10 ms latency**,  
 making it suitable for rapid VR/AR prototyping, educational visualization, and interactive installations.  
 
----
-
 > **Keywords:** Head Pose Estimation · MediaPipe Face Landmarker · Transformer Regression ·  
 > One-Euro Filter · Realtime Unity Integration · BIWI Kinect Dataset
+
+---
 
 ## Project Overview
 
@@ -92,11 +92,11 @@ The table below summarizes each functional stage of the pipeline.
 
 ```mermaid
 flowchart LR
-    A[Webcam Capture<br/>(OpenCV)] --> B[MediaPipe FaceMesh<br/>478 Landmarks]
-    B --> C[Box Normalize<br/>(x,y) Coordinates]
-    C --> D[Transformer Model<br/>Predict Roll / Pitch / Yaw]
-    D --> E[One-Euro Filter<br/>Smooth Angles]
-    E --> F[UDP Transmission<br/>127.0.0.1:9999]
-    F --> G[Unity Receiver (C#)<br/>Camera Rotation]
+    A["Webcam Capture\n(OpenCV)"] --> B["MediaPipe FaceMesh\n478 Landmarks"]
+    B --> C["Box Normalize\n(x,y) Coordinates"]
+    C --> D["Transformer Model\nPredict Roll / Pitch / Yaw"]
+    D --> E["One-Euro Filter\nSmooth Angles"]
+    E --> F["UDP Transmission\n127.0.0.1:9999"]
+    F --> G["Unity Receiver (C#)\nCamera Rotation"]
 
 
