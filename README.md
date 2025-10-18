@@ -118,16 +118,9 @@ These landmarks provide rich geometric cues for accurately estimating head orien
 MediaPipe FaceMesh produces 478 landmarks across eyes, lips, and contours.  
 Each landmark has normalized (x, y, z) coordinates.
 
-![Face Mesh 478 Landmarks](https://ai.google.dev/static/edge/mediapipe/solutions/vision/face_landmarker/images/face_landmark.png)
+![Face Mesh 478 Landmarks](https://ai.google.dev/static/mediapipe/images/solutions/face_landmarker_keypoints.png)
 
 *(Image source: Google MediaPipe Face Landmarker Guide.)*
-
----
-
-### References
-- [Official MediaPipe Face Landmarker Guide](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker)  
-- Bazarevsky et al., *BlazeFace: Sub-Millisecond Neural Face Detection on Mobile GPUs*, Google Research (2019)  
-- Casiez et al., *The One Euro Filter: A Simple Speed-Based Low-Pass Filter for Noisy Input in Interactive Systems*, CHI 2012  
 
 ---
 
@@ -180,69 +173,49 @@ Each subject folder includes synchronized RGB, depth, and annotation files:
 
 ## End-to-End Pipeline
 
-```mermaid
+%%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart LR
-    subgraph TRAIN[Offline Training (BIWI)]
-      A1[BIWI RGB + Pose Labels] --> A2[Landmark Extraction (MediaPipe)]
-      A2 --> A3[Coordinate Normalization]
-      A3 --> A4[Transformer Regression Training<br/>(Roll, Yaw, Pitch)]
-      A4 --> A5[(transformer.pth)]
-    end
+  %% ---------- Offline Training ----------
+  subgraph TRAIN[Offline Training - BIWI]
+    A1[BIWI RGB + Pose Labels] --> A2[Landmark Extraction (MediaPipe)]
+    A2 --> A3[Coordinate Normalization]
+    A3 --> A4[Transformer Regression Training (Roll, Yaw, Pitch)]
+    A4 --> A5[(transformer.pth)]
+  end
 
-    subgraph INFER[Online Inference (Python Runtime)]
-      B1[Webcam Frame] --> B2[FaceMesh (478 landmarks)]
-      B2 --> B3[Normalization]
-      B3 --> B4[Transformer Prediction]
-      B4 --> B5[One-Euro Filter]
-      B5 --> B6[UDP Packet (rollZ, pitchX, yawY)]
-    end
+  %% ---------- Online Inference ----------
+  subgraph INFER[Online Inference - Python Runtime]
+    B1[Webcam Frame] --> B2[FaceMesh (478 landmarks)]
+    B2 --> B3[Normalization]
+    B3 --> B4[Transformer Prediction]
+    B4 --> B5[One-Euro Filter]
+    B5 --> B6[UDP Packet (rollZ, pitchX, yawY)]
+  end
 
-    subgraph UNITY[Unity Engine]
-      C1[UDP Receiver (C#)] --> C2[Auto-Spin Logic ± 30°]
-      C2 --> C3[Main Camera Rotation]
-    end
+  %% ---------- Unity ----------
+  subgraph UNITY[Unity Engine]
+    C1[UDP Receiver (C#)] --> C2[Auto-Spin Logic +/- 30 deg]
+    C2 --> C3[Main Camera Rotation]
+  end
 
-    A5 -. pretrained weights .-> B4
-    B6 --> C1
-```
+  %% ---------- Cross-links ----------
+  A5 -. pretrained weights .-> B4
+  B6 --> C1
 
----
-
-## Real-Time Sequence
-
-```mermaid
-sequenceDiagram
-    participant Cam as Webcam
-    participant MP as MediaPipe FaceMesh
-    participant T as Transformer (PyTorch)
-    participant F as One-Euro Filter
-    participant U as UDP Sender
-    participant C as UDP Receiver (Unity)
-    participant Cam3D as Main Camera
-
-    Cam->>MP: Capture frame (BGR)
-    MP-->>MP: Extract 478 landmarks (x,y,z)
-    MP->>T: Send normalized (x,y)
-    T-->>T: Predict roll, pitch, yaw
-    T->>F: Apply filter
-    F-->>U: Smoothed angles
-    U->>C: Transmit rollZ,pitchX,yawY
-    C-->>Cam3D: Update camera rotation (+auto-spin)
-```
 
 ---
 
 ## Training Pipeline
 
-```mermaid
+%%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart TB
     D1[BIWI RGB Frames] --> P1[MediaPipe Landmarks]
-    D2[Ground-Truth Angles] --> J[Preprocessing / Alignment]
+    D2[Ground Truth Angles] --> J[Preprocessing and Alignment]
     P1 --> N1[Coordinate Normalization]
-    N1 --> M1[Transformer Training (MSE Loss)]
+    N1 --> M1[Transformer Training - MSE Loss]
     J --> M1
     M1 --> W[(transformer.pth)]
-```
+
 
 ---
 
@@ -288,9 +261,7 @@ project_root/
 │  └─ face_tracking.cs        # Unity UDP receiver for camera rotation
 │
 ├─ figures/
-│  ├─ face_mesh_example.png
-│  ├─ biwi_rgb_depth_example.png
-│  └─ end_to_end_pipeline.svg
+│  └─ overview_concept.png
 │
 ├─ recording.gif              # Demonstration animation
 └─ README.md                  # Project documentation
