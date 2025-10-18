@@ -74,17 +74,15 @@ Each component in the data pipeline is summarized below.
 ---
 
 ### End-to-End Data Flow
-
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false}}}%%
+%%{init: {'flowchart': {'htmlLabels': false, 'curve': 'basis'}, 'themeVariables': {'scale': 0.5}}}%%
 flowchart TB
-    A["Webcam Capture\n(OpenCV)"] --> B["MediaPipe FaceMesh\n(478 Landmarks)"]
+    A["Webcam Capture\n(OpenCV)"] --> B["MediaPipe FaceMesh (478 Landmarks)"]
     B --> C["Coordinate Normalization"]
-    C --> D["Transformer Model\nPredict Roll / Pitch / Yaw"]
-    D --> E["One Euro Filter\nAdaptive Smoothing"]
+    C --> D["Transformer Model Predict Roll / Pitch / Yaw"]
+    D --> E["One Euro Filter Adaptive Smoothing"]
     E --> F["UDP Transmission"]
     F --> G["Unity Receiver (C#)\nCamera Rotation"]
-
 ```
 
 ---
@@ -177,9 +175,8 @@ Each subject folder includes synchronized RGB, depth, and annotation files:
 
 ## End-to-End Pipeline
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false}}}%%
+%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.5}}}%%
 flowchart TB
-  %% ---------- Offline Training ----------
   subgraph TRAIN[Offline Training - BIWI]
     A1[BIWI RGB and Pose Labels] --> A2[Landmark Extraction via MediaPipe]
     A2 --> A3[Coordinate Normalization]
@@ -189,23 +186,24 @@ flowchart TB
 
   %% ---------- Online Inference ----------
   subgraph INFER[Online Inference - Python Runtime]
-    B1[Webcam Frame] --> B2[FaceMesh with 478 Landmarks]
+    I0(( )):::spacer
+    I0 --> B1[Webcam Frame]
+    B1 --> B2[FaceMesh with 478 Landmarks]
     B2 --> B3[Normalization]
     B3 --> B4[Transformer Prediction]
     B4 --> B5[One Euro Filter]
     B5 --> B6[UDP Packet rollZ pitchX yawY]
   end
 
-  %% ---------- Unity ----------
   subgraph UNITY[Unity Engine]
     C1[UDP Receiver in C Sharp] --> C2[Auto Spin Logic plusminus 30 deg]
     C2 --> C3[Main Camera Rotation]
   end
 
-  %% ---------- Cross Links ----------
   A5 -. pretrained weights .-> B4
   B6 --> C1
 
+  classDef spacer fill:transparent,stroke:transparent,color:transparent;
 ```
 
 
@@ -213,7 +211,7 @@ flowchart TB
 
 ## Training Pipeline
 ```mermaid
-%%{init: {'flowchart': {'htmlLabels': false}}}%%
+%%{init: {'flowchart': {'htmlLabels': false, 'useMaxWidth': false}, 'themeVariables': {'scale': 0.5}}}%%
 flowchart TB
     D1[BIWI RGB Frames] --> P1[MediaPipe Landmarks]
     D2[Ground Truth Angles] --> J[Preprocessing and Alignment]
